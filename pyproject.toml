@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "py-motion-detector"
+version = "0.1.0"
+description = ""
+authors = ["ambauma <andrew_5a+github@protonmail.com>"]
+
+[tool.poetry.dependencies]
+python = ">=3.7,<3.11"
+picamera = "^1.13"
+numpy = "^1.21.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+black = "^21.9b0"
+pytest-cov = "^3.0.0"
+coverage = {extras = ["toml"], version = "^6.1"}
+pytest-mockito = "^0.0.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--cov py_motion_detector --cov-report term-missing"
+
+[tool.coverage.run]
+branch = true
+source = ["py_motion_detector"]
+
+[tool.coverage.html]
+directory = "coverage_html_report"
