@@ -54,8 +54,8 @@ class Watcher:
     def compare(self):
         """Compare low res images for differences."""
         if len(self.streams) == 2:
-            data0 = np.fromstring(self.streams[0].getvalue(), dtype=np.uint8)
-            data1 = np.fromstring(self.streams[1].getvalue(), dtype=np.uint8)
+            data0 = np.frombuffer(self.streams[0].getvalue(), dtype=np.uint8)
+            data1 = np.frombuffer(self.streams[1].getvalue(), dtype=np.uint8)
             difference = np.abs(data0 - data1)
             num_triggers = (
                 np.count_nonzero(difference > self.threshold) / 4 / self.threshold
