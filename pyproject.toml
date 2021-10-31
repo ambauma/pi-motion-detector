@@ -29,3 +29,6 @@ source = ["py_motion_detector"]
 
 [tool.coverage.html]
 directory = "coverage_html_report"
+
+[tool.poetry.scripts]
+py-motion-detector = "py_motion_detector.cli:init"

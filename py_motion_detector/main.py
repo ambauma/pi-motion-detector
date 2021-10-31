@@ -80,10 +80,3 @@ class Watcher:
         self.camera.capture(new_img, "rgba", True)  # use video port for high speed
         self.streams.append(new_img)
         self.compare()
-
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-    with Watcher() as mw:
-        while mw.continue_looping:
-            mw.watch()

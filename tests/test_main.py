@@ -2,6 +2,10 @@
 import io
 import logging
 import random
+import os
+import signal
+import time
+import threading
 import pytest
 from mockito import expect, mock, unstub, any_, patch
 from picamera import PiCamera
@@ -13,17 +17,12 @@ from py_motion_detector import Watcher
 
 @pytest.fixture(name="first_image", scope="module")
 def generate_first_image():
-    #random.seed(9)
-    #yield bytes("".join([str(random.randint(0, 255)) for _ in range(1440 * 1088)]), "utf8")
-    ##ss = SeedSequence(12345)
     rng = default_rng(12345)
     ints = rng.integers(low=0, high=255, size=1440 * 1088 * 4)
     yield np.array(ints).tobytes()
 
 @pytest.fixture(name="second_image", scope="module")
 def generate_second_image():
-    random.seed(11)
-    #yield bytes("".join([str(random.randint(0, 255)) for _ in range(1440 * 1088)]), "utf8")
     rng = default_rng(11111)
     ints = rng.integers(low=0, high=255, size=1440 * 1088 * 4)
     yield np.array(ints).tobytes()
@@ -90,3 +89,34 @@ def test_watcher_with_changes(unstub, caplog, first_image, second_image):
     assert logs[7][1] == logging.INFO
     assert logs[7][2].startswith("Triggering capture")
     assert logs[8] == (logger, logging.DEBUG, "Closing camera...")
+
+
+def test_watcher_sigint(unstub, caplog, first_image, second_image):
+    """Test the watcher sigint behavior."""
+    pid = os.getpid()
+
+    def trigger_signal():
+        time.sleep(2)
+        logging.info("Killing pid %s", pid)
+        os.kill(pid, signal.SIGINT)
+    
+    thread = threading.Thread(target=trigger_signal)
+    thread.daemon = True
+    thread.start()
+
+    mock_camera = mock(PiCamera, strict=True)
+    mock_bytes0 = mock(io.BytesIO, strict=True)
+    mock_bytes1 = mock(io.BytesIO, strict=True)
+
+    expect(sut).PiCamera().thenReturn(mock_camera)
+    expect(sut.io).BytesIO().thenReturn(mock_bytes0, mock_bytes1)
+    expect(mock_camera).capture(mock_bytes0, "rgba", True)
+    expect(mock_camera).capture(mock_bytes1, "rgba", True)
+    second_image = first_image
+    expect(mock_bytes0).getvalue().thenReturn(first_image)
+    expect(mock_bytes1).getvalue().thenReturn(second_image)
+    expect(mock_camera).close()
+    with Watcher() as watcher:
+        while watcher.continue_looping:
+            watcher.watch()
+    assert watcher.continue_looping is False
