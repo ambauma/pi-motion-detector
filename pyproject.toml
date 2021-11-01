@@ -1,8 +1,19 @@
 [tool.poetry]
 name = "py-motion-detector"
-version = "0.1.1"
-description = ""
-authors = ["ambauma <andrew_5a+github@protonmail.com>"]
+version = "0.1.2"
+description = "A python based motion detection application for the raspberry pi."
+authors = ["ambauma <ambauma@users.noreply.github.com>"]
+readme = "README.rst"
+repository = "https://github.com/ambauma/pi-motion-detector/"
+classifiers = [
+    "Framework :: Pytest",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Home Automation",
+    "Operating System :: RISC OS",
+    "Operating System :: POSIX :: Linux"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.11"
