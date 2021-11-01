@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "py-motion-detector"
 version = "0.1.1"
-description = ""
+description = "A python based motion detection application for the raspberry pi."
 authors = ["ambauma <andrew_5a+github@protonmail.com>"]
 
 [tool.poetry.dependencies]
