@@ -7,8 +7,8 @@ A python based motion detection application for the raspberry pi.  Current versi
 Usage
 -----
 
-``
-py-motion-detector
-``
+To start the application::
 
-Hit Ctrl-C to exit or use ``kill <pid>``S.
+    py-motion-detector
+
+Hit Ctrl-C to exit or use ``kill <pid>``.
